@@ -7,28 +7,44 @@ class BinarySearchTree {
         this.right = null;
     }
 
-    insert(key, value){
-        if(this.key === null){
+    insert(key, value) {
+        // If the tree is empty then this key being inserted is the root node of the tree
+        if (this.key == null) {
             this.key = key;
             this.value = value;
         }
-        else if (key < this.key){
-            if (this.left = null){
+
+        /* If the tree already exists, then start at the root, 
+           and compare it to the key you want to insert.
+           If the new key is less than the node's key 
+           then the new node needs to live in the left-hand branch */
+        else if (key < this.key) {
+            /* If the existing node does not have a left child, 
+               meaning that if the `left` pointer is empty, 
+               then we can just instantiate and insert the new node 
+               as the left child of that node, passing `this` as the parent */
+            if (this.left == null) {
                 this.left = new BinarySearchTree(key, value, this);
             }
+            /* If the node has an existing left child, 
+               then we recursively call the `insert` method 
+               so the node is added further down the tree */
             else {
                 this.left.insert(key, value);
             }
         }
+        /* Similarly, if the new key is greater than the node's key 
+           then you do the same thing, but on the right-hand side */
         else {
-            if (this.right === null){
-                this.right = new BinarySearchTree(key, value, this)
+            if (this.right == null) {
+                this.right = new BinarySearchTree(key, value, this);
             }
             else {
-                this.right.insert(key, value)
+                this.right.insert(key, value);
             }
         }
     }
+
     find(key){
         if(this.key === key){
             return this.value;
@@ -111,4 +127,20 @@ class BinarySearchTree {
         return this.left._findMin();
     }
 
+}
+
+function createBalancedBst(arr, start =0, end = arr.length){
+    if(start===end){
+        return null
+    }
+    const middleIndex = Math.floor((start+end)/2);
+    const middleValue = arr[middleIndex];
+
+    const leftSubtree = createBalanced(arr, start, middleIndex);
+    const rightSubtree = createBalancedBst(arr, middleIndex +1, end);
+
+    const node = new BinarySearchTree(middleValue);
+    node.left = leftSubtree;
+    node.right = rightSubtree;
+    return node;
 }
